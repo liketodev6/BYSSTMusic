@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="33" viewBox="0 0 46 33">
+  <g id="Group_1095" data-name="Group 1095" transform="translate(-1735 -336)">
+    <g id="Rectangle_1876" data-name="Rectangle 1876" transform="translate(1735 336)" fill="#fff" stroke="#c7d0e1" stroke-width="1">
+      <rect width="46" height="33" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="45" height="32" rx="2.5" fill="none"/>
+    </g>
+    <path id="Icon_awesome-check-circle" data-name="Icon awesome-check-circle" d="M21.685,11.124A10.561,10.561,0,1,1,11.124.563,10.561,10.561,0,0,1,21.685,11.124ZM9.9,16.716,17.738,8.88a.681.681,0,0,0,0-.964l-.964-.964a.681.681,0,0,0-.964,0l-6.39,6.39L6.437,10.36a.681.681,0,0,0-.964,0l-.964.964a.681.681,0,0,0,0,.964l4.429,4.429A.681.681,0,0,0,9.9,16.716Z" transform="translate(1746.438 341.438)" fill="#0fb67e"/>
+  </g>
+</svg>

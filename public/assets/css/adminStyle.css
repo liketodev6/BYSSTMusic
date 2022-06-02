@@ -1,0 +1,99 @@
+.add__new-user {
+    color: var(--iq-white);
+    background: transparent linear-gradient(180deg, #09A370 0%, #10BA80 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 30px;
+    padding: 14px 42px;
+}
+.add__user-btn{
+    padding: 18px 23px;
+    background: transparent linear-gradient(180deg, #09A370 0%, #10BA80 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 30px;
+    margin: 0 26px;
+    color: var(--iq-white);
+}
+.action-icons button{
+    background: transparent;
+}
+#navbarUsersContent {
+    border-bottom: none;
+}
+.edit-modal__content{
+    display: flex;
+}
+.modal-avatar__img{
+    height: 138px;
+    width: 138px;
+    border-radius: 50%;
+    margin:0 55px 12px 0;
+}
+.modal-avatar__img img{
+    height: 100%;
+    width: 100%;
+
+}
+.users-table .user-circle{
+    margin-right: 27px;
+}
+.modal-avatar{
+    display: flex;
+    flex-direction: column;
+}
+.change-avatar__link {
+    color: var(--iq-color1);
+    text-decoration: underline;
+    font-size: 18px;
+    line-height: 27px;
+    font-weight: 400;
+}
+.edit-btn {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: 0px;
+    color: var(--iq-white);
+    padding: 18px 84px;
+    background: transparent linear-gradient(180deg, #09A370 0%, #10BA80 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 30px;
+}
+.remove-content{
+    max-width: 488px;
+    padding: 64px;
+}
+.remove-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.remove-content__title {
+    margin: 20px 0 10px;
+}
+.remove-content__description{
+    margin-bottom: 42px;
+}
+.remove-cancel {
+    background: transparent;
+}
+.remove-form button {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 25px;
+    color :var(--iq-color32);
+}
+.remove-button {
+    background: transparent linear-gradient(180deg, #F53649 0%, #D82C3D 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 30px;
+    color: var(--iq-white)!important;
+    padding: 14px 54px ;
+    margin-right: 10px;
+}
+
+.social-block--line th, .social-block--line td {
+    border: none;
+}
+.social-block--line .table thead th {
+    border-bottom: none;
+}
