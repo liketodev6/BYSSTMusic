@@ -2,121 +2,220 @@
 
 @section('content')
     <div id="content-page" class="content-page">
-        <div class="iq-navbar-custom">
-            <nav class="navbar navbar-expand-lg navbar-light p-0">
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
-                    <i class="ri-menu-3-line"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-                    <ul class="list-unstyled iq-menu-top d-flex justify-content-between mb-0 p-0">
-                        <li class="active"><a href="{{route('music')}}">In-progress</a></li>
-                        <li style="pointer-events: none"><a href="complete.html">Complete</a></li>
-                        <li style="pointer-events: none"><a href="inactive.html">Inactive</a></li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto navbar-list">
-                        <li class="nav-item nav-icon">
-                        </li>
-                        <li class="nav-item nav-icon search-content">
-                            <a href="#" class="search-toggle iq-waves-effect text-gray rounded"><span
-                                    class="ripple rippleEffect "></span>
-                                <i class="ri-search-line text-black"></i>
-                            </a>
-                            <form action="#" class="search-box p-0">
-                                <input type="text" class="text search-input" placeholder="Type here to search...">
-                                <a class="search-link" href="#"><i class="ri-search-line text-black"></i></a>
-                                <a class="search-audio" href="#"><i class="las la-microphone text-black"></i></a>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-
         <div class="container-fluid">
-            <div class="row row-eq-height">
-                <div style="margin-top: 10px !important;" class="inProgress-blocks">
-                    @foreach($musics['ringbacktone'] as $music)
-                        <div class="inProgress-block">
-                            <div class="settled">
-                                Settled
-                            </div>
-                            <div class="singer-info">
-                                <div class="singer-img">
-                                    <img src="{{asset('assets/image/music/song-pic.svg')}}" alt="">
-                                </div>
-                                <div class="song-name">
-                                    <div class="page-title--2">
-                                        {{$music->originalName}}
-                                    </div>
-                                    <div class="singer-name page-title--3"> {{$music->artistName}}</div>
-                                </div>
+            <h3 style="!important; padding-top: 10px; color: #0BAC76" class="page-title4 mb-1">Music</h3>
+            <div class="iq-navbar-custom">
+                <nav class="navbar navbar-expand-lg navbar-light p-0">
 
-                            </div>
-                            <div class="song-info">
-                                <div class="song-info--item">
-                                    <p class="format">Format: </p>
-                                    <span>.mp3</span>
-                                </div>
-                                <div class="song-info--item">
-                                    <p class="label-name">Label Name: </p>
-                                    <span>song1</span>
-                                </div>
-                                <div class="song-info--item">
-                                    <p class="publisher-name">Publisher name: </p>
-                                    <span>Jessica</span>
-                                </div>
-                            </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
+                        <i class="ri-menu-3-line"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                        <ul id="tabs" class="list-unstyled iq-menu-top d-flex justify-content-between mb-0 p-0">
+                            <li class="active"><a href="javascript:void(0)" onclick="tabs($(this), 'in-progress')"
+                                                  class="tablinks">In-progress</a></li>
+                            <li><a href="javascript:void(0)" onclick="tabs($(this), 'complete')"
+                                   class="tablinks">Complete</a></li>
+                            <li><a href="javascript:void(0)" onclick="tabs($(this), 'inactive')"
+                                   class="tablinks">Inactive</a></li>
+                        </ul>
+                        <ul class="navbar-nav ml-auto navbar-list">
+                            <li class="nav-item nav-icon">
+                            </li>
+                            <li class="nav-item nav-icon search-content">
+                                <a href="#" class="search-toggle iq-waves-effect text-gray rounded"><span
+                                        class="ripple rippleEffect "></span>
+                                    <i class="ri-search-line text-black"></i>
+                                </a>
+                                <form action="#" class="search-box p-0">
+                                    <input type="text" class="text search-input" placeholder="Type here to search...">
+                                    <a class="search-link" href="#"><i class="ri-search-line text-black"></i></a>
+                                    <a class="search-audio" href="#"><i class="las la-microphone text-black"></i></a>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div id="content-page-in-progress">
+                <div class="m-subheader ">
+                    <div class="d-flex align-items-center">
+                        <div class="mr-auto">
+                            <h4 class="m-subheader__title" style="color: #0bac76">
+                                Distribute Audio
+                            </h4>
                         </div>
-                    @endforeach
+                        <div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row row-eq-height">
+                        <div style="margin-top: 10px !important;" class="inProgress-blocks">
+                            @foreach($musics['songs'] as $music)
+                                <div class="inProgress-block">
+                                    <div class="settled">
+                                        Settled
+                                    </div>
+                                    <div class="singer-info">
+                                        <div class="singer-img">
+                                            <img src="{{url("storage/uploads/cover_photos/$music->cover_name")}}"
+                                                 alt="">
+                                        </div>
+                                        <div class="song-name">
+                                            <div class="page-title--2">
+                                                {{$music->record_label}}
+                                            </div>
+                                            <div class="singer-name page-title--3"> {{$music->record_artist}}</div>
+                                            @if(!is_null($music->smart_link))
+                                                <a class="singer-name page-title--3"
+                                                   href="{{$music->smart_link}}"> {{$music->smart_link}}</a>
+                                            @endif
+                                        </div>
+
+                                    </div>
+                                    <div class="song-info">
+                                        <div class="song-info--item">
+                                            <p class="format">Format: </p>
+                                            <span>.{{$music->music_format}}</span>
+                                        </div>
+                                        <div class="song-info--item">
+                                            <p class="label-name">Label Name: </p>
+                                            <span>{{$music->record_label}}</span>
+                                        </div>
+                                        <div class="song-info--item">
+                                            <p class="publisher-name">Publisher name: </p>
+                                            <span>{{$music->music_publisher}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <h4 class="m-subheader__title" style="color: #0bac76;margin-left: -34px;">
+                        Youtube ContentID
+                    </h4>
+                    <div class="row row-eq-height">
+                        <div style="margin-top: 10px !important;" class="inProgress-blocks">
+                            @foreach($musics['youtubeContent'] as $music)
+                                <div class="inProgress-block">
+                                    <div class="settled">
+                                        Settled
+                                    </div>
+                                    <div class="singer-info">
+                                        <div class="singer-img">
+                                            <img src="{{asset('assets/image/music/song-pic.svg')}}" alt="">
+                                        </div>
+                                        <div class="song-name">
+                                            <div class="page-title--2">
+                                                {{$music->originalName}}
+                                            </div>
+                                            <div class="singer-name page-title--3"> {{$music->artistName}}</div>
+                                            @if(!is_null($music->smart_link))
+                                                <a class="singer-name page-title--3"
+                                                   href="{{$music->smart_link}}"> {{$music->smart_link}}</a>
+                                            @endif
+                                        </div>
+
+                                    </div>
+                                    <div class="song-info">
+                                        <div class="song-info--item">
+                                            <p class="format">Format: </p>
+                                            <span>.{{explode('.', $music->fileName)[1]}}</span>
+                                        </div>
+                                        <div class="song-info--item">
+                                            <p class="label-name">Label Name: </p>
+                                            <span>{{$music->labelName}}</span>
+                                        </div>
+                                        <div class="song-info--item">
+                                            <p class="publisher-name">Publisher name: </p>
+                                            <span>{{$music->publisher}}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="row row-eq-height">
-                <div style="margin-top: 148px !important;" class="inProgress-blocks">
-                    @foreach($musics['youtubeContent'] as $music)
-                        <div class="inProgress-block">
-                            <div class="settled">
-                                Settled
-                            </div>
-                            <div class="singer-info">
-                                <div class="singer-img">
-                                    <img src="{{asset('assets/image/music/song-pic.svg')}}" alt="">
-                                </div>
-                                <div class="song-name">
-                                    <div class="page-title--2">
-                                        {{$music->originalName}}
-                                    </div>
-                                    <div class="singer-name page-title--3"> {{$music->artistName}}</div>
-                                </div>
-
-                            </div>
-                            <div class="song-info">
-                                <div class="song-info--item">
-                                    <p class="format">Format: </p>
-                                    <span>.mp3</span>
-                                </div>
-                                <div class="song-info--item">
-                                    <p class="label-name">Label Name: </p>
-                                    <span>{{$music->labelName}}</span>
-                                </div>
-                                <div class="song-info--item">
-                                    <p class="publisher-name">Publisher name: </p>
-                                    <span>{{$music->publisher}}</span>
-                                </div>
-                                <div class="song-info--item">
-                                    <p class="catalog:">Catalog: </p>
-                                    <span>example12</span>
-                                </div>
-
-                            </div>
+            <div id="content-page-complete" style="display: none">
+                <div class="music_complete_block">
+                    <div class="destination_block_inner">
+                        <p class="destination_title">Distribute Audio</p>
+                        <div class="destination_block_content">
+                            <table class="table" cellspacing="0" style="overflow-x:auto">
+                                <thead>
+                                <tr>
+                                    <th class="destination_table_title">#</th>
+                                    <th class="destination_table_title" style="text-align: left">Track Name</th>
+                                    <th class="destination_table_title" style="text-align: left">Duration</th>
+                                    <th class="destination_table_title" style="text-align: left">Upload Date</th>
+                                    <th class="destination_table_title" style="text-align: left">Smart Link</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if(count($musics['songs']) > 0)
+                                    @foreach($musics['songs'] as $key => $song)
+                                        <tr class="" style="background-color: #F7F7F7">
+                                            <td>{{$key+1}}</td>
+                                            <td class="delivered_td">{{$song->music_original_name}}</td>
+                                            <td style="text-align: left">{{$song->file_duration}}</td>
+                                            <td style="text-align: left">{{$song->created_at}}</td>
+                                            <td style="text-align: left; padding: 10px 20px">
+                                                <div class=""><a href="{{$song->smart_link}}"
+                                                                 style="color: #707070">{{$song->smart_link}}</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
                         </div>
-                    @endforeach
+                    </div>
+                </div>
+                <div class="music_complete_block">
+                    <div class="destination_block_inner">
+                        <p class="destination_title">Content ID</p>
+                        <div class="destination_block_content">
+                            <table class="table" cellspacing="0" style="overflow-x:auto">
+                                <thead>
+                                <tr>
+                                    <th class="destination_table_title">#</th>
+                                    <th class="destination_table_title" style="text-align: left">Track Name</th>
+                                    <th class="destination_table_title" style="text-align: left">Duration</th>
+                                    <th class="destination_table_title" style="text-align: left">Upload Date</th>
+                                    <th class="destination_table_title" style="text-align: left">Smart Link</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if(count($musics['youtubeContent']) > 0)
+                                    @foreach($musics['youtubeContent'] as $key => $song)
+                                        <tr class="" style="background-color: #F7F7F7">
+                                            <td>{{$key+1}}</td>
+                                            <td class="delivered_td">{{$song->songTitle}}</td>
+                                            <td style="text-align: left">{{$song->file_duration}}</td>
+                                            <td style="text-align: left">{{$song->created_at}}</td>
+                                            <td style="text-align: left; padding: 10px 20px">
+                                                <div class=""><a href="{{$song->smart_link}}"
+                                                                           style="color: #707070">{{$song->smart_link}}</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
     <!-- Wrapper END -->
@@ -202,4 +301,23 @@
             </form>
         </div>
     </div>
+    <script>
+        function tabs(_this, tab) {
+            if (tab == 'in-progress') {
+                $('#content-page-in-progress').css('display', 'block');
+                $('#content-page-complete').css('display', 'none');
+            } else if (tab == 'complete') {
+                $('#content-page-in-progress').css('display', 'none');
+                $('#content-page-complete').css('display', 'block');
+            } else {
+                $('#content-page-in-progress').css('display', 'none');
+                $('#content-page-complete').css('display', 'none');
+            }
+            let tabs = $('#tabs li a');
+            $.each(tabs, function () {
+                $(this).parent().removeClass('active');
+            });
+            $(_this).parent().addClass('active');
+        }
+    </script>
 @endsection

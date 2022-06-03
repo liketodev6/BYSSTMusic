@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DataVisualisation;
 use App\Models\Ringbacktone;
+use App\Models\Song;
 use App\Models\YoutubeContent;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class MusicMenuController extends Controller
 {
     public function musicIndex()
     {
-        $musics['ringbacktone'] = Ringbacktone::all();
+        $musics['songs'] = Song::all();
         $musics['youtubeContent'] = YoutubeContent::all();
         return view('music', compact('musics'));
     }
