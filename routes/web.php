@@ -66,7 +66,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 //    Route::get('/revenue', [App\Http\Controllers\HomeController::class, 'getPageRevenueList'])->name('revenue');
 //    Route::get('/withdraw-request', [App\Http\Controllers\HomeController::class, 'getPageWithdrawRequest'])->name('withdraw.request');
 //    Route::get('/transfer-list', [App\Http\Controllers\HomeController::class, 'getPageTransferList'])->name('transfer.list')
-    Route::post('/add-royality', [App\Http\Controllers\HomeController::class, 'addRoyality'])->name('addRoyality');
+    Route::post('/add-royality', [App\Http\Controllers\HomeController::class, 'uploadContent'])->name('addRoyality');
     Route::get('/complete-songs', [App\Http\Controllers\HomeController::class, 'completeSongs'])->name('complete.songs');
     Route::get('/track-download/{id}', [App\Http\Controllers\HomeController::class, 'trackDownload'])->name('track.download');
     Route::get('/content-id-download/{id}', [App\Http\Controllers\HomeController::class, 'contentIdDownload'])->name('content.id.download');

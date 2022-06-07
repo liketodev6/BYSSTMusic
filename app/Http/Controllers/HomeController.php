@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataVisualisation;
+use App\Models\DataVizual;
 use App\Models\Song;
 use App\Models\User;
 use App\Models\YoutubeContent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Validator;
@@ -123,6 +125,101 @@ class HomeController extends Controller
         }
     }
 
+    public function uploadContent(Request $request)
+    {
+        $data = $request->all();
+        $rules = ([
+            'userId' => 'required',
+            'service' => 'required',
+            'file' => 'required',
+        ]);
+        $validator = \Illuminate\Support\Facades\Validator::make($data, $rules);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        $file = $request->file('file');
+        if ($file) {
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $tempPath = $file->getRealPath();
+            $fileSize = $file->getSize();
+            $this->checkUploadedFileProperties($extension, $fileSize);
+            $location = 'uploads';
+            $file->move($location, $filename);
+            $filepath = public_path($location . "/" . $filename);
+            $file = fopen($filepath, "r");
+            $importData_arr = array();
+            $i = 0;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                if ($i == 0) {
+                    $i++;
+                    continue;
+                }
+                for ($c = 0; $c < $num; $c++) {
+                    $importData_arr[$i][] = $filedata[$c];
+                }
+                $i++;
+            }
+            fclose($file); //Close after reading
+            $j = 0;
+            foreach ($importData_arr as $importData) {
+                $j++;
+                try {
+                    DB::beginTransaction();
+                    DataVizual::query()->create([
+                        'userId' => $request->userId,
+                        'service' => $request->service,
+                        'reportingMonth' => $importData[1],
+                        'trackName' => $importData[2],
+                        'artistName' => $importData[3],
+                        'transuctionMediaIsrc' => $importData[4],
+                        'albumName' => $importData[5],
+                        'transuctionMediaUpc' => $importData[6],
+                        'country' => $importData[7],
+                        'platform' => $importData[8],
+                        'totalUnits' => $importData[9],
+                        'netRevenue' => $importData[10],
+                    ]);
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                }
+            }
+            return redirect()->back()->with("$j records successfully uploaded");
+        } else {
+            throw new \Exception('No file was uploaded', Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function checkUploadedFileProperties($extension, $fileSize)
+    {
+        $valid_extension = array("csv", "xlsx"); //Only want csv and excel files
+        $maxFileSize = 2097152; // Uploaded file size limit is 2mb
+        if (in_array(strtolower($extension), $valid_extension)) {
+            if ($fileSize <= $maxFileSize) {
+            } else {
+                throw new \Exception('No file was uploaded', Response::HTTP_REQUEST_ENTITY_TOO_LARGE); //413 error
+            }
+        } else {
+            throw new \Exception('Invalid file extension', Response::HTTP_UNSUPPORTED_MEDIA_TYPE); //415 error
+        }
+    }
+
+    public function sendEmail($email, $name)
+    {
+        $data = array(
+            'email' => $email,
+            'name' => $name,
+            'subject' => 'Welcome Message',
+        );
+        Mail::send('welcomeEmail', $data, function ($message) use ($data) {
+            $message->from('welcome@myapp.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
+    }
+
     public function trackDownload($id)
     {
         $song = Song::query()->where('id', $id)->get();
@@ -148,6 +245,7 @@ class HomeController extends Controller
             return response()->json(['message' => 'ok']);
         }
     }
+
     public function addsmartlinkcontentId(Request $request)
     {
         if (YoutubeContent::query()->where('id', $request->id)

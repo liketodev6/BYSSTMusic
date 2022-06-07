@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataVisualisation;
+use App\Models\DataVizual;
 use App\Models\Ringbacktone;
 use App\Models\Song;
 use App\Models\YoutubeContent;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MusicMenuController extends Controller
 {
@@ -26,13 +28,9 @@ class MusicMenuController extends Controller
 
     public function getPageRoyality()
     {
-        $data = null;
-        $data = DataVisualisation::query()->where('userId', Auth::user()->id)->first();
-        if (!is_null($data)) {
-            file_put_contents('tmp.csv', $data['file']);
-            $data['details'] = array_map('str_getcsv', file('tmp.csv'));
-            unlink('tmp.csv');
-        }
+//        $data = DataVizual::query()->where('userId', Auth::user()->id)->first();
+        $data['platformsTotal'] = DataVizual::query()->groupBy('platform')->select('platform', DB::raw('count(id) as total'))->get();
+        $data['allData'] = DataVizual::all();
         return view('royality', compact('data'));
     }
 }

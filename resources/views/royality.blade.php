@@ -73,7 +73,8 @@
                         Best Performing Stores
                     </div>
                     <div class="block-2--diagram">
-                        <img src="{{asset('assets/image/royality/stores.svg')}}" alt="">
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                        {{--                        <img src="{{asset('assets/image/royality/stores.svg')}}" alt="">--}}
                     </div>
                 </div>
             </div>
@@ -129,8 +130,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if (!is_null($data))
-                                @foreach($data['details'] as $detail)
+                            @if (count($data['allData'])>0)
+                                @foreach($data['allData'] as $detail)
                                     <tr class="green-bg tr-items" line="{{$detail[0]}}">
                                         <td>{{$detail[3]}}</td>
                                         <td>3</td>
@@ -160,8 +161,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if (!is_null($data))
-                                @foreach($data['details'] as $detail)
+                            @if (count($data['allData'])>0)
+                                @foreach($data['allData'] as $detail)
                                     <tr line="{{$detail[0]}}">
                                         <td><img class="social-icon"
                                                  src="{{asset('assets/image/royality/'. $detail[8].'.png')}}"
@@ -258,7 +259,7 @@
     </div>
     <script type="text/javascript">
         function makeTr(line) {
-            var jsArray = <?php echo !is_null($data) ? json_encode($data['details']):''; ?>;
+            var jsArray = <?php echo count($data['allData']) > 0 ? json_encode($data['allData']) : ''; ?>;
             let tds = `<td class="block-1--description royality_tracks">${jsArray[line - 1][1]}</td>
                     <td class="block-1--description royality_tracks">${jsArray[line - 1][2]}</td>
                     <td class="block-1--description royality_tracks">${jsArray[line - 1][3]}</td>
@@ -271,6 +272,42 @@
                     <td class="block-1--description royality_tracks">${jsArray[line - 1][10]}</td>`
             $("#modal_details").html(tds);
         }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        let colors = {
+            'TikTok': 'rgb(255, 0, 110)',
+            'Facebook': 'rgb(18, 193, 174)',
+            'YouTube Music': 'rgb(10, 32, 62)',
+            'Instagram': 'rgb(40, 126, 247)',
+            'Apple Music': 'rgb(196, 130, 219)'
+        }
+        setTimeout(function () {
+            let dataChart = <?php echo count($data['platformsTotal']) > 0 ? $data['platformsTotal'] : null; ?>;
+            let labels = [];
+            let data = [];
+            let backgroundColor = [];
+            $.each(dataChart, (key, val) => {
+                labels.push(val.platform);
+                data.push(val.total);
+                backgroundColor.push(colors[val.platform]);
+            })
+
+            const ctx = $('#myChart');
+            const myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '# of Votes',
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        hoverOffset: 4
+                    }]
+                },
+            });
+        }, 1500);
     </script>
 @section('content')
 
