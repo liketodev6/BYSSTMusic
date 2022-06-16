@@ -11,12 +11,15 @@
             <div class="block-1">
                 <div class="report">
                     <div class="diagram">
-                        <img src="{{asset('assets/image/royality/diagrama.svg')}}" alt="">
+                        <canvas id="lineChart" width="600" height="320"
+                                style="display: block; width: 600px; height: 320px;"></canvas>
                     </div>
                     <div class="monthly">
                         <h3 class="block-1--title">Monthly Report</h3>
                         <div class="block-1--description">Last reporting months</div>
                         <div class="block-1--description">total earnings</div>
+
+
                         <div class="block-1---price">$1.38</div>
                         <div class="monthly-sale">-20.01%</div>
                         <p class="monthly-month">vs Previous Month</p>
@@ -65,7 +68,9 @@
                         Best Performing Countries
                     </div>
                     <div class="block-2--map">
-                        <img src="{{asset('assets/image/royality/map.svg')}}" alt="">
+                        <div id="svgMap"></div>
+                        <canvas id="mapChart" class="bar-chart chartjs-render-monitor" width="600" height="320"
+                                style="display: block; width: 600px; height: 320px;"></canvas>
                     </div>
                 </div>
                 <div class="block-2--stores block-bg">
@@ -74,7 +79,6 @@
                     </div>
                     <div class="block-2--diagram">
                         <canvas id="myChart" width="400" height="400"></canvas>
-                        {{--                        <img src="{{asset('assets/image/royality/stores.svg')}}" alt="">--}}
                     </div>
                 </div>
             </div>
@@ -274,17 +278,20 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js"></script>
+
     <script>
 
         let colors = {
             'TikTok': 'rgb(255, 0, 110)',
+            'YouTube': 'rgb(255, 0, 110)',
             'Facebook': 'rgb(18, 193, 174)',
-            'YouTube Music': 'rgb(10, 32, 62)',
+            'YouTube Red': 'rgb(10, 32, 62)',
             'Instagram': 'rgb(40, 126, 247)',
             'Apple Music': 'rgb(196, 130, 219)'
         }
         setTimeout(function () {
-            let dataChart = <?php echo count($data['platformsTotal']) > 0 ? $data['platformsTotal'] : null; ?>;
+            let dataChart = <?php echo count($data['bestPerformingStores']) > 0 ? $data['bestPerformingStores'] : null; ?>;
             let labels = [];
             let data = [];
             let backgroundColor = [];
@@ -307,7 +314,193 @@
                     }]
                 },
             });
-        }, 1500);
+        }, 2000);
+    </script>
+    <script>
+        setTimeout(function () {
+            let bestPerformingCountries = <?php echo count($data['bestPerformingCountries']) > 0 ? $data['bestPerformingCountries'] : null; ?>;
+            let labels = {};
+            let countryName = [];
+            let data = [];
+            let backgroundColor = [];
+            $.each(bestPerformingCountries, (key, val) => {
+                labels[val.country] = {};
+                countryName.push(val.country);
+                data.push(val.total);
+            })
+            new svgMap({
+                targetElementID: 'svgMap',
+                data: {
+                    data: {
+                        gdp: {
+                            // name: '',
+                            //     format: '{0} USD',
+                            //     thousandSeparator: ',',
+                            //     thresholdMax: 50000,
+                            //     thresholdMin: 1000
+                            // },
+                            // change: {
+                            //     name: 'bbb',
+                            //     // format: '{50} %'
+                        }
+                    },
+                    applyData: 'gdp',
+                    values: labels
+                    // DZ: {gdp: 4293, change: 10.01}
+                }
+            });
+            const ctx = $('#mapChart');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: countryName,
+                    datasets: [{
+                        label: '# of Downloads',
+                        indexAxis: 'y',
+                        data: data,
+                        fill: false,
+                        backgroundColor: [
+                            'rgb(65,105,225)',
+                            'rgb(65,105,225)',
+                            'rgb(65,105,225)',
+                            'rgb(65,105,225)',
+                            'rgb(65,105,225)',
+                            'rgb(65,105,225)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        tooltip: {
+                            // Disable the on-canvas tooltip
+                            enabled: false,
+                            external: function (context) {
+                                let countryCode = $(this)[0].title;
+                                $('#svgMap-map-country-' + countryCode).attr('fill', 'rgb(65,105,225)');
+                                // Tooltip Element
+                                let tooltipEl = document.getElementById('chartjs-tooltip');
+                                if (!tooltipEl) {
+                                    tooltipEl = document.createElement('div');
+                                    tooltipEl.id = 'chartjs-tooltip';
+                                    tooltipEl.innerHTML = '<table></table>';
+                                    document.body.appendChild(tooltipEl);
+                                }
+
+                                // Hide if no tooltip
+                                const tooltipModel = context.tooltip;
+                                if (tooltipModel.opacity === 0) {
+                                    tooltipEl.style.opacity = 0;
+                                    $('#svgMap-map-country-' + countryCode).attr('fill', '#cc0033');
+                                    $('#svgMap-map-country-' + countryCode).css('stroke', '#fff');
+                                    $('#svgMap-map-country-' + countryCode).css('stroke-width', '1');
+                                    return;
+                                }
+
+                                // Set caret Position
+                                tooltipEl.classList.remove('above', 'below', 'no-transform');
+                                if (tooltipModel.yAlign) {
+                                    tooltipEl.classList.add(tooltipModel.yAlign);
+                                    $('#svgMap-map-country-' + countryCode).css('stroke', '#333');
+                                    $('#svgMap-map-country-' + countryCode).css('stroke-width', '1.5');
+                                    $('#svgMap-map-country-' + countryCode).attr('fill', 'rgb(65,105,225)');
+                                } else {
+                                    tooltipEl.classList.add('no-transform');
+                                }
+
+                                function getBody(bodyItem) {
+                                    return bodyItem.lines;
+                                }
+
+                                // Set Text
+                                if (tooltipModel.body) {
+                                    const titleLines = tooltipModel.title || [];
+                                    const bodyLines = tooltipModel.body.map(getBody);
+
+                                    let innerHtml = '<thead>';
+
+                                    titleLines.forEach(function (title) {
+                                        innerHtml += '<tr><th>' + title + '</th></tr>';
+                                    });
+                                    innerHtml += '</thead><tbody>';
+
+                                    bodyLines.forEach(function (body, i) {
+                                        const colors = tooltipModel.labelColors[i];
+                                        let style = 'background:' + colors.backgroundColor;
+                                        style += '; border-color:' + colors.borderColor;
+                                        style += '; border-width: 2px';
+                                        const span = '<span style="' + style + '"></span>';
+                                        innerHtml += '<tr><td>' + span + body + '</td></tr>';
+                                    });
+                                    innerHtml += '</tbody>';
+
+                                    let tableRoot = tooltipEl.querySelector('table');
+                                    tableRoot.innerHTML = innerHtml;
+                                }
+
+                                const position = context.chart.canvas.getBoundingClientRect();
+                                const bodyFont = Chart.helpers.toFont(tooltipModel.options.bodyFont);
+
+                                // Display, position, and set styles for font
+                                tooltipEl.style.opacity = 1;
+                                tooltipEl.style.position = 'absolute';
+                                tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                                tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                                tooltipEl.style.font = bodyFont.string;
+                                tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
+                                tooltipEl.style.pointerEvents = 'none';
+                            }
+                        }
+                    }
+                }
+            });
+        }, 2000);
+    </script>
+
+    <script>
+
+        setTimeout(function () {
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            let lineChart = <?php echo count($data['lineChart']) > 0 ? $data['lineChart'] : null; ?>;
+            let labels = [];
+            let data = [];
+            $.each(lineChart, (key, val) => {
+                var d = new Date(val.reportingMonth);
+                var monthName = months[d.getMonth()];
+                labels.push(monthName);
+                data.push(val.totalSum);
+            })
+            console.log(data);
+            const ctx = $('#lineChart');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Earnings',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        fill: false,
+                        borderColor: '#287ef7',
+                        tension: 0.1
+                    },
+                        {
+                            label: 'Streams',
+                            data: data,
+                            fill: false,
+                            borderColor: '#ff006e',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Downloads',
+                            data: [10, 20, 30, 40, 50, 60, 70],
+                            fill: false,
+                            borderColor: '#12c1ae',
+                            tension: 0.1
+                        },
+                    ]
+                },
+            });
+        }, 2000);
     </script>
 @section('content')
 
