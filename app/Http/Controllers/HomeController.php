@@ -253,4 +253,42 @@ class HomeController extends Controller
             return response()->json(['message' => 'ok']);
         }
     }
+
+    public function getPageRevenueList()
+    {
+        $data['bestPerformingStores'] = DataVizual::query()->groupBy('platform')
+            ->select('platform', DB::raw('count(id) as total'))
+            ->get();
+        $data['lineChart'] = DataVizual::query()->groupBy('reportingMonth')
+            ->select('reportingMonth', DB::raw('sum(totalUnits) as totalSum'))
+            ->orderBy('reportingMonth', 'ASC')
+            ->get();
+        $totalEarning = DataVizual::query()->groupBy('reportingMonth')
+            ->select('reportingMonth', DB::raw('sum(netRevenue) as totalSumRevenue'))
+            ->orderBy('reportingMonth', 'ASC')
+            ->get()->toArray();
+
+        $lastMonth = $totalEarning[count($totalEarning) - 1]['totalSumRevenue'];
+        $previewsMonth = $totalEarning[count($totalEarning) - 2]['totalSumRevenue'];
+        $totalEarningPercentage = (1 - $previewsMonth / $lastMonth) * 100;
+        $data['lastMonthEarning'] = round($lastMonth, 2);
+        $data['totalEarningPercentage'] = round($totalEarningPercentage, 2);
+
+        $data['bestPerformingCountries'] = DataVizual::query()->groupBy('country')
+            ->select('country', DB::raw('count(id) as total'))
+            ->orderBy('total', 'DESC')
+            ->take(10)->get();
+        $data['allData'] = DataVizual::all();
+        return view('admin.revenue', compact('data'));
+    }
+
+    public function getPageWithdrawRequest()
+    {
+        return view('admin.withDrawRequest');
+    }
+
+    public function getPageTransferList()
+    {
+        return view('admin.transferList');
+    }
 }

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Auth::routes();
 
 Route::get('/', function () {
@@ -44,11 +43,9 @@ Route::get('/', function () {
 //    Route::get('/users', [App\Http\Controllers\HomeController::class, 'getPageUsersList'])->name('users');
 //    Route::get('/revenue', [App\Http\Controllers\HomeController::class, 'getPageRevenueList'])->name('revenue');
 //    Route::get('/withdraw-request', [App\Http\Controllers\HomeController::class, 'getPageWithdrawRequest'])->name('withdraw.request');
-//    Route::get('/transfer-list', [App\Http\Controllers\HomeController::class, 'getPageTransferList'])->name('transfer.list');
+//    Route::get('/transfer-list', [App\Http\Controllers\HomeController::class, 'getPageTransferList'])->name('transfer.list')
 //
-//    Route::post('/add-new-user', [AuthController::class, 'postRegistration'])->name('add.new.user');
 //});
-
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -58,14 +55,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
 //    Route::get('/music-list', [App\Http\Controllers\HomeController::class, 'getPageMusicList'])->name('music.list');
     Route::get('/royality', [App\Http\Controllers\HomeController::class, 'getPageRoyality'])->name('royality');
     Route::get('/users', [App\Http\Controllers\HomeController::class, 'getPageUsersList'])->name('users');
+    Route::post('/add-new-user', [AuthController::class, 'postRegistration'])->name('add.new.user');
     Route::get('/album-atwork/{song_id}/{which}', [App\Http\Controllers\HomeController::class, 'albumAtwork'])->name('album.atwork');
     Route::delete('/delete-song', [App\Http\Controllers\HomeController::class, 'deleteSong'])->name('delete.song');
     Route::delete('/delete-content-id', [App\Http\Controllers\HomeController::class, 'deleteContentId'])->name('delete.content.id');
     Route::post('/approve-song', [App\Http\Controllers\HomeController::class, 'approveSong'])->name('approve.song');
     Route::post('/approve-content-id', [App\Http\Controllers\HomeController::class, 'approveContentId'])->name('approve.content.id');
-//    Route::get('/revenue', [App\Http\Controllers\HomeController::class, 'getPageRevenueList'])->name('revenue');
-//    Route::get('/withdraw-request', [App\Http\Controllers\HomeController::class, 'getPageWithdrawRequest'])->name('withdraw.request');
-//    Route::get('/transfer-list', [App\Http\Controllers\HomeController::class, 'getPageTransferList'])->name('transfer.list')
+    Route::get('/revenue', [App\Http\Controllers\HomeController::class, 'getPageRevenueList'])->name('revenue');
+    Route::get('/withdraw-request', [App\Http\Controllers\HomeController::class, 'getPageWithdrawRequest'])->name('withdraw.request');
+    Route::get('/transfer-list', [App\Http\Controllers\HomeController::class, 'getPageTransferList'])->name('transfer.list');
     Route::post('/add-royality', [App\Http\Controllers\HomeController::class, 'uploadContent'])->name('addRoyality');
     Route::get('/complete-songs', [App\Http\Controllers\HomeController::class, 'completeSongs'])->name('complete.songs');
     Route::get('/track-download/{id}', [App\Http\Controllers\HomeController::class, 'trackDownload'])->name('track.download');

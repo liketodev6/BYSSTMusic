@@ -34,8 +34,21 @@ class MusicMenuController extends Controller
             ->get();
         $data['lineChart'] = DataVizual::query()->groupBy('reportingMonth')
             ->select('reportingMonth', DB::raw('sum(totalUnits) as totalSum'))
+
+
             ->orderBy('reportingMonth', 'ASC')
             ->get();
+        $totalEarning = DataVizual::query()->groupBy('reportingMonth')
+            ->select('reportingMonth', DB::raw('sum(netRevenue) as totalSumRevenue'))
+            ->orderBy('reportingMonth', 'ASC')
+            ->get()->toArray();
+
+        $lastMonth = $totalEarning[count($totalEarning) - 1]['totalSumRevenue'];
+        $previewsMonth = $totalEarning[count($totalEarning) - 2]['totalSumRevenue'];
+        $totalEarningPercentage = (1 - $previewsMonth / $lastMonth) * 100;
+        $data['lastMonthEarning'] = round($lastMonth, 2);
+        $data['totalEarningPercentage'] = round($totalEarningPercentage, 2);
+
         $data['bestPerformingCountries'] = DataVizual::query()->groupBy('country')
             ->select('country', DB::raw('count(id) as total'))
             ->orderBy('total', 'DESC')
